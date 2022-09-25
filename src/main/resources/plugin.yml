@@ -1,0 +1,4 @@
+name: Bloodmoon
+version: '${project.version}'
+main: net.bingecraft.bloodmoon.Bloodmoon
+api-version: 1.19
