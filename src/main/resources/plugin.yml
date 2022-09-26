@@ -2,3 +2,8 @@ name: Bloodmoon
 version: '${project.version}'
 main: net.bingecraft.bloodmoon.Bloodmoon
 api-version: 1.19
+commands:
+  bloodmoon:
+    description: set difficulty to hard
+    usage: /<command>
+    permission: bloodmoon
