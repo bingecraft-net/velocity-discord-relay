@@ -4,19 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public final class BloodmoonRepeatingTask implements Runnable {
-    private Plugin plugin;
+    private World world;
 
-    BloodmoonRepeatingTask(Plugin plugin) {
-        this.plugin = plugin;
+    BloodmoonRepeatingTask(World world) {
+        this.world = world;
     }
 
     @Override
     public void run() {
-        World world = plugin.getServer().getWorld("world");
-
         long fullTime = world.getFullTime();
         long time = world.getTime();
         boolean isBloodMoon = ((fullTime / 24000) % 3) > 1;
