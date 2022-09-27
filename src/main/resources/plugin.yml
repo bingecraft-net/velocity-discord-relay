@@ -1,6 +1,6 @@
 name: Bloodmoon
 version: '${project.version}'
-main: net.bingecraft.bloodmoon.Bloodmoon
+main: net.bingecraft.bloodmoon.Plugin
 api-version: 1.19
 commands:
   bloodmoon:
