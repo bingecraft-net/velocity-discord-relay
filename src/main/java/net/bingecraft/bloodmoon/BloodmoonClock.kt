@@ -2,9 +2,14 @@ package net.bingecraft.bloodmoon;
 
 import org.bukkit.Difficulty
 
-class BloodmoonClock {
+class BloodmoonClock(
+  private val intervalTicks: Long,
+  private val startTicks: Long,
+  private val endTicks: Long
+) {
   fun getDifficulty(tick: Long): Difficulty {
-    return if ((tick + 71000L) % 72000L < 59000L) Difficulty.PEACEFUL
-    else Difficulty.HARD
+    val offset = intervalTicks + intervalTicks - endTicks
+    val isBloodmoon = (tick + offset) % intervalTicks >= (startTicks + offset) % intervalTicks
+    return if (isBloodmoon) Difficulty.HARD else Difficulty.PEACEFUL
   }
 }

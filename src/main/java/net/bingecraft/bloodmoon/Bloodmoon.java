@@ -7,7 +7,7 @@ public final class Bloodmoon extends JavaPlugin implements CommandExecutor {
     @Override
     public void onEnable() {
         Runnable task = new BloodmoonRepeatingTask(
-                new BloodmoonClock(),
+                new BloodmoonClock(72000L, 60000L, 73000L),
                 getServer().getWorld("world")
         );
         getServer()
