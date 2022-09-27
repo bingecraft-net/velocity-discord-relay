@@ -1,13 +1,25 @@
 package net.bingecraft.bloodmoon;
 
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Bloodmoon extends JavaPlugin implements CommandExecutor {
   @Override
   public void onEnable() {
+    FileConfiguration config = getConfig();
+    config.addDefault("intervalTicks", 72000L);
+    config.addDefault("startTicks", 60000L);
+    config.addDefault("endTicks", 73000L);
+    config.options().copyDefaults(true);
+    saveConfig();
+
     Runnable task = new BloodmoonRepeatingTask(
-      new BloodmoonClock(72000L, 60000L, 73000L),
+      new BloodmoonClock(
+        config.getLong("intervalTicks"),
+        config.getLong("startTicks"),
+        config.getLong("endTicks")
+      ),
       getServer().getWorld("world")
     );
     getServer()
