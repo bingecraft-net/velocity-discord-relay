@@ -1,0 +1,2 @@
+#!/bin/zsh
+mvn versions:set -DnewVersion=`git rev-list --count HEAD`
