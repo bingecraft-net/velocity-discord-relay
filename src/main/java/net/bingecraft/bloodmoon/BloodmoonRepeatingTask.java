@@ -22,7 +22,7 @@ public final class BloodmoonRepeatingTask implements Runnable {
     Difficulty want = bloodmoonClock.getDifficulty(world.getFullTime());
     if (have != want) {
       world.setDifficulty(want);
-      String message = MessageFormat.format("difficulty for {0} set to {1}", world.getName(), want);
+      String message = MessageFormat.format("[Bloodmoon] difficulty for {0} set to {1}", world.getName(), want);
       Bukkit.getConsoleSender().sendMessage(message);
     }
 
