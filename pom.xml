@@ -6,7 +6,7 @@
 
     <groupId>net.bingecraft</groupId>
     <artifactId>bloodmoon</artifactId>
-    <version>12</version>
+    <version>13</version>
     <packaging>jar</packaging>
 
     <name>Bloodmoon</name>
@@ -19,6 +19,25 @@
     <build>
         <finalName>bloodmoon-${version}</finalName>
         <plugins>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>1.7.10</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
