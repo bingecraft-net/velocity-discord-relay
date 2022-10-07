@@ -6,7 +6,7 @@
 
     <groupId>net.bingecraft</groupId>
     <artifactId>bloodmoon</artifactId>
-    <version>19</version>
+    <version>20</version>
     <packaging>jar</packaging>
 
     <name>Bloodmoon</name>
