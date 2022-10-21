@@ -30,9 +30,12 @@ public final class Listener implements org.bukkit.event.Listener {
   public void onPrepareAnvilEvent(PrepareAnvilEvent event) {
     ItemStack first = event.getInventory().getFirstItem();
     ItemStack second = event.getInventory().getSecondItem();
+    tryRepair(event, first, second);
+    tryRepair(event, second, first);
+  }
 
+  private void tryRepair(PrepareAnvilEvent event, ItemStack first, ItemStack second) {
     if (first == null || !isCheaplyRepairable(first.getType()) || second == null) return;
-
     if (second.getType().equals(Material.NETHER_BRICK)) {
       ItemStack repaired = repair(first, (int) (durabilityPerNetherBrick * second.getAmount()));
       event.setResult(repaired);
