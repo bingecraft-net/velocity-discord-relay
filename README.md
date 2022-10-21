@@ -4,7 +4,7 @@ Cheaper Netherite Repair is a Minecraft server plugin that adds cheaper anvil re
 
 ## demo
 
-The Cheaper Netherite Repair plugin will soon be running on the [bingecraft.net Minecraft server](https://bingecraft.net).
+The Cheaper Netherite Repair plugin is running on the [bingecraft.net Minecraft server](https://bingecraft.net).
 
 
 ## installation
