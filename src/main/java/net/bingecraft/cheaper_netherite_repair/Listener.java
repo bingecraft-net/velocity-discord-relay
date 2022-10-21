@@ -6,12 +6,16 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
+import java.util.function.Consumer;
+
 public final class Listener implements org.bukkit.event.Listener {
 
   private final double durabilityPerNetherBrick;
+  private final Consumer<Runnable> scheduler;
 
-  public Listener(double durabilityPerNetherBrick) {
+  public Listener(double durabilityPerNetherBrick, Consumer<Runnable> scheduler) {
     this.durabilityPerNetherBrick = durabilityPerNetherBrick;
+    this.scheduler = scheduler;
   }
 
   private static final Material[] repairables = {
@@ -41,13 +45,13 @@ public final class Listener implements org.bukkit.event.Listener {
       int amount = (int) (durabilityPerNetherBrick * second.getAmount());
       ItemStack repaired = repair(first, amount);
       event.setResult(repaired);
-      event.getInventory().setRepairCost(0);
+      scheduler.accept(() -> event.getInventory().setRepairCost(0));
     }
     else if (second.getType().equals(Material.NETHER_BRICKS)) {
       int amount = (int) (durabilityPerNetherBrick * second.getAmount() * 4);
       ItemStack firstItemRepaired = repair(first, amount);
       event.setResult(firstItemRepaired);
-      event.getInventory().setRepairCost(0);
+      scheduler.accept(() -> event.getInventory().setRepairCost(0));
     }
   }
 

@@ -13,7 +13,8 @@ public final class Plugin extends JavaPlugin {
 
     getServer().getPluginManager().registerEvents(
       new Listener(
-        config.getDouble("durabilityPerNetherBrick")
+        config.getDouble("durabilityPerNetherBrick"),
+        (Runnable runnable) -> getServer().getScheduler().runTask(this, runnable)
       ),
       this
     );
