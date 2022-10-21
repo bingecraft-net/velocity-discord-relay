@@ -1,4 +1,4 @@
-name: Bloodmoon
+name: cheaper-netherite-repair
 version: '${project.version}'
-main: net.bingecraft.bloodmoon.Plugin
+main: net.bingecraft.cheaper_netherite_repair.Plugin
 api-version: 1.19
