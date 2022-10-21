@@ -27,21 +27,21 @@ public final class Listener implements org.bukkit.event.Listener {
   };
 
   @EventHandler
-  public void onPrepareAnvilEvent(PrepareAnvilEvent prepareAnvilEvent) {
-    ItemStack firstItem = prepareAnvilEvent.getInventory().getFirstItem();
-    ItemStack secondItem = prepareAnvilEvent.getInventory().getSecondItem();
+  public void onPrepareAnvilEvent(PrepareAnvilEvent event) {
+    ItemStack first = event.getInventory().getFirstItem();
+    ItemStack second = event.getInventory().getSecondItem();
 
-    if (firstItem == null || !isCheaplyRepairable(firstItem.getType()) || secondItem == null) return;
+    if (first == null || !isCheaplyRepairable(first.getType()) || second == null) return;
 
-    if (secondItem.getType().equals(Material.NETHER_BRICK)) {
-      ItemStack firstItemRepaired = repair(firstItem, (int) (durabilityPerNetherBrick * secondItem.getAmount()));
-      prepareAnvilEvent.setResult(firstItemRepaired);
-      prepareAnvilEvent.getInventory().setRepairCost(0);
+    if (second.getType().equals(Material.NETHER_BRICK)) {
+      ItemStack repaired = repair(first, (int) (durabilityPerNetherBrick * second.getAmount()));
+      event.setResult(repaired);
+      event.getInventory().setRepairCost(0);
     }
-    else if (secondItem.getType().equals(Material.NETHER_BRICKS)) {
-      ItemStack firstItemRepaired = repair(firstItem, (int) (durabilityPerNetherBrick * secondItem.getAmount() * 4));
-      prepareAnvilEvent.setResult(firstItemRepaired);
-      prepareAnvilEvent.getInventory().setRepairCost(0);
+    else if (second.getType().equals(Material.NETHER_BRICKS)) {
+      ItemStack firstItemRepaired = repair(first, (int) (durabilityPerNetherBrick * second.getAmount() * 4));
+      event.setResult(firstItemRepaired);
+      event.getInventory().setRepairCost(0);
     }
   }
 
