@@ -7,13 +7,13 @@ public final class Plugin extends JavaPlugin {
   @Override
   public void onEnable() {
     FileConfiguration config = getConfig();
-    config.addDefault("durabilityPerNetherBrick", 0.5f);
+    config.addDefault("durabilityPerNetherBrick", 0.5);
     config.options().copyDefaults(true);
     saveConfig();
 
     getServer().getPluginManager().registerEvents(
       new Listener(
-        config.getInt("durabilityPerNetherBrick")
+        config.getDouble("durabilityPerNetherBrick")
       ),
       this
     );

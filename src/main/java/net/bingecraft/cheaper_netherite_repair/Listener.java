@@ -8,9 +8,9 @@ import org.bukkit.inventory.meta.Damageable;
 
 public final class Listener implements org.bukkit.event.Listener {
 
-  private final float durabilityPerNetherBrick;
+  private final double durabilityPerNetherBrick;
 
-  public Listener(float durabilityPerNetherBrick) {
+  public Listener(double durabilityPerNetherBrick) {
     this.durabilityPerNetherBrick = durabilityPerNetherBrick;
   }
 
