@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.bingecraft</groupId>
-    <artifactId>cheaper-netherite-repair</artifactId>
-    <version>27</version>
+    <artifactId>nether-regions</artifactId>
+    <version>28</version>
     <packaging>jar</packaging>
 
-    <name>cheaper-netherite-repair</name>
+    <name>nether-regions</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -17,7 +17,7 @@
     </properties>
 
     <build>
-        <finalName>cheaper-netherite-repair-${version}</finalName>
+        <finalName>nether-regions-${version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
