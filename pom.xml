@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.bingecraft</groupId>
-    <artifactId>nether-regions</artifactId>
-    <version>28</version>
+    <artifactId>velocity-discord-console</artifactId>
+    <version>29</version>
     <packaging>jar</packaging>
 
-    <name>nether-regions</name>
+    <name>velocity-discord-console</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -17,7 +17,7 @@
     </properties>
 
     <build>
-        <finalName>nether-regions-${version}</finalName>
+        <finalName>velocity-discord-console-${version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -90,9 +90,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
