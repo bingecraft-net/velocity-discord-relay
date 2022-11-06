@@ -6,7 +6,7 @@
 
     <groupId>net.bingecraft</groupId>
     <artifactId>velocity-discord-console</artifactId>
-    <version>29</version>
+    <version>30</version>
     <packaging>jar</packaging>
 
     <name>velocity-discord-console</name>
@@ -79,6 +79,10 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -94,6 +98,11 @@
             <artifactId>velocity-api</artifactId>
             <version>3.1.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-alpha.22</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
