@@ -11,6 +11,9 @@ public class EventRelay {
 
   public EventRelay(JDA jda, Configuration configuration) {
     relayChannel = jda.getTextChannelById(configuration.relayChannelId);
+    if (relayChannel == null) {
+      throw new RuntimeException("Could not find relay channel with id: " + configuration.relayChannelId);
+    }
   }
 
   @Subscribe
