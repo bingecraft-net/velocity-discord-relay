@@ -5,7 +5,7 @@ Velocity Discord Relay is a [Velocity Proxy](https://velocitypowered.com/) plugi
 ## installation
 
 ```
-git clone git@github.com:arctair/velocity-discord-relay.git
+git clone git@github.com:bingecraft-net/velocity-discord-relay.git
 cd velocity-discord-relay
 mvn clean package
 ```
