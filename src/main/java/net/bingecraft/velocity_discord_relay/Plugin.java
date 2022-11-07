@@ -1,4 +1,4 @@
-package net.bingecraft.velocity_discord_console;
+package net.bingecraft.velocity_discord_relay;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.JDA;
 
 import java.nio.file.Path;
 
-@com.velocitypowered.api.plugin.Plugin(id = "velocity-discord-console")
+@com.velocitypowered.api.plugin.Plugin(id = "velocity-discord-relay")
 public final class Plugin {
   private final ProxyServer proxyServer;
   private final Path dataDirectory;

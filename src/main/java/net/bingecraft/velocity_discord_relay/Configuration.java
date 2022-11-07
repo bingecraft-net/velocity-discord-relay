@@ -1,4 +1,4 @@
-package net.bingecraft.velocity_discord_console;
+package net.bingecraft.velocity_discord_relay;
 
 public class Configuration {
   public final String token;

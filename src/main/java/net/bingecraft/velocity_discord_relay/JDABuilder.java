@@ -1,4 +1,4 @@
-package net.bingecraft.velocity_discord_console;
+package net.bingecraft.velocity_discord_relay;
 
 import net.dv8tion.jda.api.JDA;
 

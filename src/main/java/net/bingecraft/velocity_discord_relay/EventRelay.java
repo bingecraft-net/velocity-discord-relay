@@ -1,4 +1,4 @@
-package net.bingecraft.velocity_discord_console;
+package net.bingecraft.velocity_discord_relay;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;

@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.bingecraft</groupId>
-    <artifactId>velocity-discord-console</artifactId>
-    <version>30</version>
+    <artifactId>velocity-discord-relay</artifactId>
+    <version>31</version>
     <packaging>jar</packaging>
 
-    <name>velocity-discord-console</name>
+    <name>velocity-discord-relay</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -17,7 +17,7 @@
     </properties>
 
     <build>
-        <finalName>velocity-discord-console-${version}</finalName>
+        <finalName>velocity-discord-relay-${version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>

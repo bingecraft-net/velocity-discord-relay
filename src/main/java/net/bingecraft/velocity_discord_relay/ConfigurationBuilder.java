@@ -1,4 +1,4 @@
-package net.bingecraft.velocity_discord_console;
+package net.bingecraft.velocity_discord_relay;
 
 import com.moandjiezana.toml.Toml;
 
