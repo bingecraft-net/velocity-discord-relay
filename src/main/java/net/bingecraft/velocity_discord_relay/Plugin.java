@@ -31,7 +31,9 @@ public final class Plugin {
   public void onProxyInitialization(ProxyInitializeEvent event) throws InterruptedException {
     Configuration configuration = new ConfigurationBuilder(dataDirectory).build();
     JDA jda = new JDABuilder(configuration).create();
-    proxyServer.getEventManager().register(this, new VelocityEventRelay(jda, configuration));
+    VelocityEventRelay velocityEventRelay = new VelocityEventRelay(jda, proxyServer, configuration);
+
+    proxyServer.getEventManager().register(this, velocityEventRelay);
     jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
   }
 }
