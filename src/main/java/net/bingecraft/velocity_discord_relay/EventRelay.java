@@ -7,19 +7,19 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class EventRelay {
-  private final TextChannel textChannel;
+  private final TextChannel relayChannel;
 
   public EventRelay(JDA jda, Configuration configuration) {
-    textChannel = jda.getTextChannelById(configuration.consoleChannelId);
+    relayChannel = jda.getTextChannelById(configuration.relayChannelId);
   }
 
   @Subscribe
   public void onServerConnected(ServerConnectedEvent event) {
-    textChannel.sendMessage(event.getPlayer().getUsername() + " joined the game").queue();
+    relayChannel.sendMessage(event.getPlayer().getUsername() + " joined the game").queue();
   }
 
   @Subscribe
   public void onDisconnect(DisconnectEvent event) {
-    textChannel.sendMessage(event.getPlayer().getUsername() + " left the game").queue();
+    relayChannel.sendMessage(event.getPlayer().getUsername() + " left the game").queue();
   }
 }

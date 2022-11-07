@@ -16,7 +16,7 @@ public final class ConfigurationBuilder {
   public ConfigurationBuilder(Path dataDirectory) {
     this.dataDirectory = dataDirectory;
     this.tokenPath = dataDirectory.resolve("token");
-    this.configurationPath = dataDirectory.resolve("configuration.txt");
+    this.configurationPath = dataDirectory.resolve("configuration.toml");
     if (!Files.exists(dataDirectory)) createDataDirectory();
     if (!Files.exists(tokenPath)) writeDefaultToken();
     if (!Files.exists(configurationPath)) writeDefaultConfiguration();
@@ -25,7 +25,7 @@ public final class ConfigurationBuilder {
   public Configuration build() {
     return new Configuration(
       readToken(),
-      new Toml().read(configurationPath.toFile()).getLong("consoleChannelId")
+      new Toml().read(configurationPath.toFile()).getLong("relayChannelId")
     );
   }
 
@@ -49,7 +49,7 @@ public final class ConfigurationBuilder {
 
   private void writeDefaultConfiguration() {
     try (BufferedWriter bufferedWriter = Files.newBufferedWriter(configurationPath)) {
-      bufferedWriter.write("consoleChannelId = 00000000000");
+      bufferedWriter.write("relayChannelId = 00000000000");
     }
     catch (IOException exception) {
       throw new RuntimeException(exception);
