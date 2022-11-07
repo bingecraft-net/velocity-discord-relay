@@ -6,10 +6,10 @@ import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-public class EventRelay {
+public class VelocityEventRelay {
   private final TextChannel relayChannel;
 
-  public EventRelay(JDA jda, Configuration configuration) {
+  public VelocityEventRelay(JDA jda, Configuration configuration) {
     relayChannel = jda.getTextChannelById(configuration.relayChannelId);
     if (relayChannel == null) {
       throw new RuntimeException("Could not find relay channel with id: " + configuration.relayChannelId);

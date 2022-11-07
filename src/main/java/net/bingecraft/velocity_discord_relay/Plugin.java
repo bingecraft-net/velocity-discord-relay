@@ -6,6 +6,7 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.dv8tion.jda.api.JDA;
+import org.slf4j.Logger;
 
 import java.nio.file.Path;
 
@@ -13,20 +14,24 @@ import java.nio.file.Path;
 public final class Plugin {
   private final ProxyServer proxyServer;
   private final Path dataDirectory;
+  private final Logger logger;
 
   @Inject
   public Plugin(
     ProxyServer proxyServer,
-    @DataDirectory Path dataDirectory
+    @DataDirectory Path dataDirectory,
+    Logger logger
   ) {
     this.proxyServer = proxyServer;
     this.dataDirectory = dataDirectory;
+    this.logger = logger;
   }
 
   @Subscribe
   public void onProxyInitialization(ProxyInitializeEvent event) throws InterruptedException {
     Configuration configuration = new ConfigurationBuilder(dataDirectory).build();
     JDA jda = new JDABuilder(configuration).create();
-    proxyServer.getEventManager().register(this, new EventRelay(jda, configuration));
+    proxyServer.getEventManager().register(this, new VelocityEventRelay(jda, configuration));
+    jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
   }
 }
