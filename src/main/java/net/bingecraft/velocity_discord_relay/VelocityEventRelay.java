@@ -10,6 +10,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class VelocityEventRelay {
   private final ProxyServer proxyServer;
@@ -36,7 +37,7 @@ public class VelocityEventRelay {
     relayChannel.sendMessage(discordMessage).queue();
 
     String gameMessage = String.format("%s left the game", username);
-    sendMessage(event.getPlayer(), Component.text(gameMessage));
+    sendMessage(event.getPlayer(), Component.text(gameMessage, NamedTextColor.YELLOW));
   }
 
   @Subscribe
