@@ -26,18 +26,20 @@ public class VelocityEventRelay {
 
   @Subscribe
   public void onServerConnected(ServerConnectedEvent event) {
-    relayChannel.sendMessage(event.getPlayer().getUsername() + " joined the game").queue();
+    String username = event.getPlayer().getUsername();
+    String message = String.format("%s joined the game", username);
+
+    relayChannel.sendMessage(message).queue();
+    sendMessage(event.getServer(), Component.text(message, NamedTextColor.YELLOW));
   }
 
   @Subscribe
   public void onDisconnect(DisconnectEvent event) {
     String username = event.getPlayer().getUsername();
+    String message = String.format("%s left the game", username);
 
-    String discordMessage = String.format("%s left the game", username);
-    relayChannel.sendMessage(discordMessage).queue();
-
-    String gameMessage = String.format("%s left the game", username);
-    sendMessage(event.getPlayer(), Component.text(gameMessage, NamedTextColor.YELLOW));
+    relayChannel.sendMessage(message).queue();
+    sendMessage(getRegisteredServer(event.getPlayer()), Component.text(message, NamedTextColor.YELLOW));
   }
 
   @Subscribe
@@ -48,11 +50,10 @@ public class VelocityEventRelay {
     relayChannel.sendMessage(discordMessage).queue();
 
     String gameMessage = String.format("<%s> %s", username, event.getMessage());
-    sendMessage(event.getPlayer(), Component.text(gameMessage));
+    sendMessage(getRegisteredServer(event.getPlayer()), Component.text(gameMessage));
   }
 
-  private void sendMessage(Player source, Component message) {
-    RegisteredServer originServer = getRegisteredServer(source);
+  private void sendMessage(RegisteredServer originServer, Component message) {
     for (RegisteredServer server : proxyServer.getAllServers()) {
       if (server.equals(originServer)) continue;
       server.sendMessage(message);
