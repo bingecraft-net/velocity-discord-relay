@@ -6,7 +6,7 @@
 
     <groupId>net.bingecraft</groupId>
     <artifactId>velocity-discord-relay</artifactId>
-    <version>42</version>
+    <version>43</version>
     <packaging>jar</packaging>
 
     <name>velocity-discord-relay</name>
@@ -17,7 +17,7 @@
     </properties>
 
     <build>
-        <finalName>velocity-discord-relay-${version}</finalName>
+        <finalName>velocity-discord-relay-${project.version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>

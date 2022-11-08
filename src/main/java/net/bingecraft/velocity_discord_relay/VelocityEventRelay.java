@@ -4,7 +4,6 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
-import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.dv8tion.jda.api.JDA;
@@ -26,11 +25,13 @@ public class VelocityEventRelay {
 
   @Subscribe
   public void onServerConnected(ServerConnectedEvent event) {
+    if (event.getPreviousServer().isPresent()) return;
+
     String username = event.getPlayer().getUsername();
     String message = String.format("%s joined the game", username);
 
     relayChannel.sendMessage(message).queue();
-    sendMessage(event.getServer(), Component.text(message, NamedTextColor.YELLOW));
+    sendMessage(Component.text(message, NamedTextColor.YELLOW));
   }
 
   @Subscribe
@@ -39,7 +40,7 @@ public class VelocityEventRelay {
     String message = String.format("%s left the game", username);
 
     relayChannel.sendMessage(message).queue();
-    sendMessage(getRegisteredServer(event.getPlayer()), Component.text(message, NamedTextColor.YELLOW));
+    sendMessage(Component.text(message, NamedTextColor.YELLOW));
   }
 
   @Subscribe
@@ -50,26 +51,12 @@ public class VelocityEventRelay {
     relayChannel.sendMessage(discordMessage).queue();
 
     String gameMessage = String.format("<%s> %s", username, event.getMessage());
-    sendMessage(getRegisteredServer(event.getPlayer()), Component.text(gameMessage));
+    sendMessage(Component.text(gameMessage));
   }
 
-  private void sendMessage(RegisteredServer originServer, Component message) {
+  private void sendMessage(Component message) {
     for (RegisteredServer server : proxyServer.getAllServers()) {
-      if (server.equals(originServer)) continue;
       server.sendMessage(message);
-    }
-  }
-
-  private RegisteredServer getRegisteredServer(Player player) {
-    return player
-      .getCurrentServer()
-      .orElseThrow(() -> new PlayerNotConnectedException(player))
-      .getServer();
-  }
-
-  private static class PlayerNotConnectedException extends RuntimeException {
-    public PlayerNotConnectedException(Player player) {
-      super(String.format("player %s is not connected to any server", player.getUsername()));
     }
   }
 }
