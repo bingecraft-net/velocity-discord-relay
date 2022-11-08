@@ -29,7 +29,20 @@ public class VelocityEventRelay {
 
   @Subscribe
   public void onDisconnect(DisconnectEvent event) {
-    relayChannel.sendMessage(event.getPlayer().getUsername() + " left the game").queue();
+    String username = event.getPlayer().getUsername();
+
+    String discordMessage = String.format("%s left the game", username);
+    relayChannel.sendMessage(discordMessage).queue();
+
+    Component gameMessage = Component.text(String.format("%s left the game", username));
+    RegisteredServer originServer = event.getPlayer()
+      .getCurrentServer()
+      .orElseThrow(() -> new PlayerNotConnectedException(username))
+      .getServer();
+    for (RegisteredServer server : proxyServer.getAllServers()) {
+      if (server.equals(originServer)) continue;
+      server.sendMessage(gameMessage);
+    }
   }
 
   @Subscribe
