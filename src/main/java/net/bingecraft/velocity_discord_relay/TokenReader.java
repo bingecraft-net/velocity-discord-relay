@@ -13,7 +13,7 @@ public final class TokenReader {
     this.tokenPath = dataDirectory.resolve("token");
   }
 
-  public String readToken() {
+  public String read() {
     if (!Files.exists(tokenPath)) writeDefaultToken();
     try (BufferedReader bufferedReader = Files.newBufferedReader(tokenPath)) {
       return bufferedReader.readLine();

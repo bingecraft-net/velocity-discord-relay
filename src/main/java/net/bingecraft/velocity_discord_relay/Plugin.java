@@ -32,8 +32,8 @@ public final class Plugin {
   @Subscribe
   public void onProxyInitialization(ProxyInitializeEvent event) throws InterruptedException {
     if (!Files.exists(dataDirectory)) createDataDirectory();
-    Configuration configuration = new ConfigurationReader(dataDirectory).build();
-    String token = new TokenReader(dataDirectory).readToken();
+    Configuration configuration = new ConfigurationReader(dataDirectory).read();
+    String token = new TokenReader(dataDirectory).read();
     JDA jda = new JDABuilder(token).create();
     VelocityEventRelay velocityEventRelay = new VelocityEventRelay(jda, proxyServer, configuration);
 
