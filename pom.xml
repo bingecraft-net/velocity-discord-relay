@@ -6,7 +6,7 @@
 
     <groupId>net.bingecraft</groupId>
     <artifactId>velocity-discord-relay</artifactId>
-    <version>46</version>
+    <version>47</version>
     <packaging>jar</packaging>
 
     <name>velocity-discord-relay</name>

@@ -8,6 +8,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.dv8tion.jda.api.JDA;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 @com.velocitypowered.api.plugin.Plugin(id = "velocity-discord-relay")
@@ -29,11 +31,21 @@ public final class Plugin {
 
   @Subscribe
   public void onProxyInitialization(ProxyInitializeEvent event) throws InterruptedException {
-    Configuration configuration = new ConfigurationBuilder(dataDirectory).build();
-    JDA jda = new JDABuilder(configuration).create();
+    if (!Files.exists(dataDirectory)) createDataDirectory();
+    Configuration configuration = new ConfigurationReader(dataDirectory).build();
+    String token = new TokenReader(dataDirectory).readToken();
+    JDA jda = new JDABuilder(token).create();
     VelocityEventRelay velocityEventRelay = new VelocityEventRelay(jda, proxyServer, configuration);
 
     proxyServer.getEventManager().register(this, velocityEventRelay);
     jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
+  }
+
+  private void createDataDirectory() {
+    try {
+      Files.createDirectory(dataDirectory);
+    } catch (IOException exception) {
+      throw new RuntimeException(exception);
+    }
   }
 }
