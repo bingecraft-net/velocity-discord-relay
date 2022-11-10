@@ -1,6 +1,0 @@
-#!/bin/zsh
-mvn clean package
-rm /home/arctair/ws/velocity-testbed/plugins/velocity-discord-relay-*.jar
-cp target/velocity-discord-relay-*.jar /home/arctair/ws/velocity-testbed/plugins
-cd /home/arctair/ws/velocity-testbed
-./execstart
