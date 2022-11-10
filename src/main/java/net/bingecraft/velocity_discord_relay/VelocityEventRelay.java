@@ -17,6 +17,7 @@ public class VelocityEventRelay {
 
   public VelocityEventRelay(JDA jda, ProxyServer proxyServer, Configuration configuration) {
     this.proxyServer = proxyServer;
+
     relayChannel = jda.getTextChannelById(configuration.relayChannelId);
     if (relayChannel == null) {
       throw new RuntimeException("Could not find relay channel with id: " + configuration.relayChannelId);
@@ -36,6 +37,8 @@ public class VelocityEventRelay {
 
   @Subscribe
   public void onDisconnect(DisconnectEvent event) {
+    if (event.getLoginStatus() != DisconnectEvent.LoginStatus.SUCCESSFUL_LOGIN) return;
+
     String username = event.getPlayer().getUsername();
     String message = String.format("%s left the game", username);
 
