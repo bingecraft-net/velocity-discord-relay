@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class VelocityEventRelay {
   private final ProxyServer proxyServer;
+  private final Configuration configuration;
   private final TextChannel relayChannel;
   private final Map<UUID, QuitMessageDetails> quitMessageDetailsByPlayerId = new ConcurrentHashMap<>();
 
@@ -32,6 +33,7 @@ public class VelocityEventRelay {
 
   public VelocityEventRelay(JDA jda, ProxyServer proxyServer, Configuration configuration) {
     this.proxyServer = proxyServer;
+    this.configuration = configuration;
 
     relayChannel = jda.getTextChannelById(configuration.relayChannelId);
     if (relayChannel == null) {
@@ -45,7 +47,7 @@ public class VelocityEventRelay {
 
     UUID id = event.getPlayer().getUniqueId();
     QuitMessageDetails quitMessageDetails = quitMessageDetailsByPlayerId.get(id);
-    if (quitMessageDetails != null && System.currentTimeMillis() - quitMessageDetails.timeMillis < 60_000) {
+    if (quitMessageDetails != null && System.currentTimeMillis() - quitMessageDetails.timeMillis < configuration.quitMessageMinAgeSeconds * 1000) {
       relayChannel.deleteMessageById(quitMessageDetails.messageId).queue();
     } else {
       String username = event.getPlayer().getUsername();

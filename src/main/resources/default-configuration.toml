@@ -1,1 +1,2 @@
 relayChannelId = 00000000000
+quitMessageMinAgeSeconds = 60
