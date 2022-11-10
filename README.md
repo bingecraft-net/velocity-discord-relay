@@ -2,7 +2,14 @@
 
 Velocity Discord Relay is a [Velocity Proxy](https://velocitypowered.com/) plugin for Discord integration. You will
 need [Backend Silencer](https://github.com/bingecraft-net/backend-silencer) on your backends to eliminate duplicate
-chat, join quit messages as well as join and quit messages upon players switching between backends.
+messages upon join, quit, chat, and player backend switches.
+
+## Features
+
+1. Forward join, quit, and chat messages between Velocity backends
+2. Forward join, quit, and chat messages to a Discord text channel
+3. Forward Discord text channel messages between Velocity backends
+4. Automatically delete rapid quit and join messages from Discord text channel
 
 ## installation
 
