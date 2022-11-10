@@ -1,0 +1,4 @@
+#!/bin/zsh
+ssh bingecraft "rm velocity-wan/plugins/velocity-discord-relay-*.jar"
+scp target/velocity-discord-relay-*.jar bingecraft:velocity-wan/plugins/
+ssh bingecraft -- systemctl --user restart velocity-wan
