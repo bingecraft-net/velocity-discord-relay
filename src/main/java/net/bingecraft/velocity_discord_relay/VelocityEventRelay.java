@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.scheduler.Scheduler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,29 +15,25 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VelocityEventRelay {
+  private final Plugin plugin;
   private final ProxyServer proxyServer;
+  private final Scheduler scheduler;
   private final Configuration configuration;
+
   private final TextChannel relayChannel;
-  private final Map<UUID, QuitMessageDetails> quitMessageDetailsByPlayerId = new ConcurrentHashMap<>();
+  private final Map<UUID, Long> quitMessageIdByPlayerId = new ConcurrentHashMap<>();
 
-  private static class QuitMessageDetails {
-    public long timeMillis;
-    public long messageId;
-
-    public QuitMessageDetails(long timeMillis, long messageId) {
-      this.timeMillis = timeMillis;
-      this.messageId = messageId;
-    }
-  }
-
-  public VelocityEventRelay(JDA jda, ProxyServer proxyServer, Configuration configuration) {
+  public VelocityEventRelay(Plugin plugin, ProxyServer proxyServer, Scheduler scheduler, Configuration configuration, JDA jda) {
     this.proxyServer = proxyServer;
     this.configuration = configuration;
+    this.scheduler = scheduler;
+    this.plugin = plugin;
 
     relayChannel = jda.getTextChannelById(configuration.relayChannelId);
     if (relayChannel == null) {
@@ -49,9 +46,9 @@ public class VelocityEventRelay {
     if (event.getPreviousServer().isPresent()) return;
 
     Player player = event.getPlayer();
-    QuitMessageDetails quitMessageDetails = quitMessageDetailsByPlayerId.get(player.getUniqueId());
-    if (quitMessageDetails != null && System.currentTimeMillis() - quitMessageDetails.timeMillis < configuration.quitMessageMinAgeSeconds * 1000) {
-      relayChannel.deleteMessageById(quitMessageDetails.messageId).queue();
+    Long quitMessageId = quitMessageIdByPlayerId.get(player.getUniqueId());
+    if (quitMessageId != null) {
+      relayChannel.deleteMessageById(quitMessageId).queue();
     } else {
       String avatarUrl = getAvatarUrl(player);
       String message = String.format("%s joined the game", player.getUsername());
@@ -73,12 +70,25 @@ public class VelocityEventRelay {
     MessageEmbed embed = new EmbedBuilder().setAuthor(messageText, avatarUrl, avatarUrl).build();
 
     relayChannel.sendMessageEmbeds(embed).queue(
-      (message) -> quitMessageDetailsByPlayerId.put(
-        event.getPlayer().getUniqueId(),
-        new QuitMessageDetails(System.currentTimeMillis(), message.getIdLong())
-      )
+      (message) -> {
+        UUID playerId = player.getUniqueId();
+        long messageId = message.getIdLong();
+
+        quitMessageIdByPlayerId.put(playerId, messageId);
+        scheduleForgetQuitMessage(playerId, messageId);
+      }
     );
     sendMessage(Component.text(messageText, NamedTextColor.YELLOW));
+  }
+
+  private void scheduleForgetQuitMessage(UUID playerId, long messageId) {
+    scheduler
+      .buildTask(plugin, () -> {
+        if (quitMessageIdByPlayerId.get(playerId) == messageId)
+          quitMessageIdByPlayerId.remove(playerId);
+      })
+      .delay(Duration.ofSeconds(configuration.quitMessageMinAgeSeconds))
+      .schedule();
   }
 
   @Subscribe

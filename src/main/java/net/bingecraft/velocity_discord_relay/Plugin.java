@@ -35,7 +35,9 @@ public final class Plugin {
     Configuration configuration = new ConfigurationReader(dataDirectory).read();
     String token = new TokenReader(dataDirectory).read();
     JDA jda = new JDABuilder(token).create();
-    VelocityEventRelay velocityEventRelay = new VelocityEventRelay(jda, proxyServer, configuration);
+    VelocityEventRelay velocityEventRelay = new VelocityEventRelay(
+      this, proxyServer, proxyServer.getScheduler(), configuration, jda
+    );
 
     proxyServer.getEventManager().register(this, velocityEventRelay);
     jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
