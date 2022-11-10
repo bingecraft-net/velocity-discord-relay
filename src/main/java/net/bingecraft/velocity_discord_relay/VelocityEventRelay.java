@@ -4,9 +4,12 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -45,15 +48,16 @@ public class VelocityEventRelay {
   public void onServerConnected(ServerConnectedEvent event) {
     if (event.getPreviousServer().isPresent()) return;
 
-    UUID id = event.getPlayer().getUniqueId();
-    QuitMessageDetails quitMessageDetails = quitMessageDetailsByPlayerId.get(id);
+    Player player = event.getPlayer();
+    QuitMessageDetails quitMessageDetails = quitMessageDetailsByPlayerId.get(player.getUniqueId());
     if (quitMessageDetails != null && System.currentTimeMillis() - quitMessageDetails.timeMillis < configuration.quitMessageMinAgeSeconds * 1000) {
       relayChannel.deleteMessageById(quitMessageDetails.messageId).queue();
     } else {
-      String username = event.getPlayer().getUsername();
-      String message = String.format("%s joined the game", username);
+      String avatarUrl = getAvatarUrl(player);
+      String message = String.format("%s joined the game", player.getUsername());
+      MessageEmbed embed = new EmbedBuilder().setAuthor(message, avatarUrl, avatarUrl).build();
 
-      relayChannel.sendMessage(message).queue();
+      relayChannel.sendMessageEmbeds(embed).queue();
       sendMessage(Component.text(message, NamedTextColor.YELLOW));
     }
   }
@@ -62,10 +66,13 @@ public class VelocityEventRelay {
   public void onDisconnect(DisconnectEvent event) {
     if (event.getLoginStatus() != DisconnectEvent.LoginStatus.SUCCESSFUL_LOGIN) return;
 
-    String username = event.getPlayer().getUsername();
+    Player player = event.getPlayer();
+    String username = player.getUsername();
     String messageText = String.format("%s left the game", username);
+    String avatarUrl = getAvatarUrl(player);
+    MessageEmbed embed = new EmbedBuilder().setAuthor(messageText, avatarUrl, avatarUrl).build();
 
-    relayChannel.sendMessage(messageText).queue(
+    relayChannel.sendMessageEmbeds(embed).queue(
       (message) -> quitMessageDetailsByPlayerId.put(
         event.getPlayer().getUniqueId(),
         new QuitMessageDetails(System.currentTimeMillis(), message.getIdLong())
@@ -83,6 +90,10 @@ public class VelocityEventRelay {
 
     String gameMessage = String.format("<%s> %s", username, event.getMessage());
     sendMessage(Component.text(gameMessage));
+  }
+
+  private static String getAvatarUrl(Player player) {
+    return String.format("https://crafatar.com/avatars/%s", player.getUniqueId());
   }
 
   private void sendMessage(Component message) {
