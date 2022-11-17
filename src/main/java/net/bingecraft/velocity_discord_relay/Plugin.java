@@ -3,6 +3,7 @@ package net.bingecraft.velocity_discord_relay;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.dv8tion.jda.api.JDA;
@@ -17,6 +18,8 @@ public final class Plugin {
   private final ProxyServer proxyServer;
   private final Path dataDirectory;
   private final Logger logger;
+
+  private NotificationClient notificationClient;
 
   @Inject
   public Plugin(
@@ -34,13 +37,24 @@ public final class Plugin {
     if (!Files.exists(dataDirectory)) createDataDirectory();
     Configuration configuration = new ConfigurationReader(dataDirectory).read();
     String token = new TokenReader(dataDirectory).read();
+
     JDA jda = new JDABuilder(token).create();
+
     VelocityEventRelay velocityEventRelay = new VelocityEventRelay(
       this, proxyServer, proxyServer.getScheduler(), configuration, jda
     );
 
+    NotificationRelay notificationRelay = new NotificationRelay(configuration, jda);
+    notificationClient = new NotificationClient(configuration, notificationRelay);
+    notificationClient.start(this, proxyServer.getScheduler());
+
     proxyServer.getEventManager().register(this, velocityEventRelay);
     jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
+  }
+
+  @Subscribe
+  public void onProxyShutdown(ProxyShutdownEvent event) {
+    notificationClient.shutdownGracefully();
   }
 
   private void createDataDirectory() {

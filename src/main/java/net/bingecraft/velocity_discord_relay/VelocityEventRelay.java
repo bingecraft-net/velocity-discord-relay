@@ -70,7 +70,7 @@ public class VelocityEventRelay {
     MessageEmbed embed = new EmbedBuilder().setAuthor(messageText, avatarUrl, avatarUrl).build();
 
     relayChannel.sendMessageEmbeds(embed).queue(
-      (message) -> {
+      message -> {
         UUID playerId = player.getUniqueId();
         long messageId = message.getIdLong();
 

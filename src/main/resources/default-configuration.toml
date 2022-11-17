@@ -1,2 +1,4 @@
 relayChannelId = 00000000000
 quitMessageMinAgeSeconds = 60
+notificationHost = "localhost"
+notificationPort = 8080
