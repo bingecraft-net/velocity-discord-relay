@@ -9,7 +9,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.scheduler.Scheduler;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.kyori.adventure.text.Component;
@@ -25,8 +24,8 @@ public class VelocityEventRelay {
   private final ProxyServer proxyServer;
   private final Scheduler scheduler;
   private final Configuration configuration;
-  private final AvatarURLFactory avatarURLFactory;
 
+  private final AvatarURLFactory avatarURLFactory;
   private final TextChannel relayChannel;
   private final Map<UUID, Long> quitMessageIdByPlayerId = new ConcurrentHashMap<>();
 
@@ -35,19 +34,15 @@ public class VelocityEventRelay {
     ProxyServer proxyServer,
     Scheduler scheduler,
     Configuration configuration,
-    JDA jda,
+    TextChannel relayChannel,
     AvatarURLFactory avatarURLFactory
   ) {
     this.plugin = plugin;
     this.proxyServer = proxyServer;
     this.scheduler = scheduler;
     this.configuration = configuration;
+    this.relayChannel = relayChannel;
     this.avatarURLFactory = avatarURLFactory;
-
-    relayChannel = jda.getTextChannelById(configuration.relayChannelId);
-    if (relayChannel == null) {
-      throw new RuntimeException("Could not find relay channel with id: " + configuration.relayChannelId);
-    }
   }
 
   @Subscribe

@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public final class Plugin {
     String token = new TokenReader(dataDirectory).read();
 
     JDA jda = new JDABuilder(token).create();
+    TextChannel relayChannel = new RelayChannelConnector(configuration, jda).connect();
     AvatarURLFactory avatarURLFactory = new AvatarURLFactory();
 
     VelocityEventRelay velocityEventRelay = new VelocityEventRelay(
@@ -46,14 +48,16 @@ public final class Plugin {
       proxyServer,
       proxyServer.getScheduler(),
       configuration,
-      jda,
+      relayChannel,
       avatarURLFactory
     );
 
-    NotificationRelay notificationRelay = new NotificationRelay(configuration, jda, avatarURLFactory);
-    notificationClient = new NotificationClient(configuration, notificationRelay);
-    notificationClient.start(this, proxyServer.getScheduler());
+    notificationClient = new NotificationClient(
+      configuration,
+      new NotificationRelay(relayChannel, avatarURLFactory)
+    );
 
+    notificationClient.start(this, proxyServer.getScheduler());
     proxyServer.getEventManager().register(this, velocityEventRelay);
     jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
   }

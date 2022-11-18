@@ -1,23 +1,18 @@
 package net.bingecraft.velocity_discord_relay;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.function.Consumer;
 
 public class NotificationRelay implements Consumer<Notification> {
-  private final AvatarURLFactory avatarURLFactory;
   private final TextChannel relayChannel;
+  private final AvatarURLFactory avatarURLFactory;
 
-  public NotificationRelay(Configuration configuration, JDA jda, AvatarURLFactory avatarURLFactory) {
+  public NotificationRelay(TextChannel relayChannel, AvatarURLFactory avatarURLFactory) {
     this.avatarURLFactory = avatarURLFactory;
-
-    relayChannel = jda.getTextChannelById(configuration.relayChannelId);
-    if (relayChannel == null) {
-      throw new RuntimeException("Could not find relay channel with id: " + configuration.relayChannelId);
-    }
+    this.relayChannel = relayChannel;
   }
 
   @Override
