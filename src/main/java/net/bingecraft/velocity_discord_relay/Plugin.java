@@ -53,11 +53,12 @@ public final class Plugin {
     );
 
     notificationClient = new NotificationClient(
+      logger,
       configuration,
       new NotificationRelay(relayChannel, avatarURLFactory)
     );
 
-    notificationClient.start(this, proxyServer.getScheduler());
+    notificationClient.connect();
     proxyServer.getEventManager().register(this, velocityEventRelay);
     jda.addEventListener(new JDAEventRelay(proxyServer, configuration));
   }
