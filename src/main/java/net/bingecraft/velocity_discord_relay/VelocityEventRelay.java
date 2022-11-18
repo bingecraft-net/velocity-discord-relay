@@ -25,15 +25,24 @@ public class VelocityEventRelay {
   private final ProxyServer proxyServer;
   private final Scheduler scheduler;
   private final Configuration configuration;
+  private final AvatarURLFactory avatarURLFactory;
 
   private final TextChannel relayChannel;
   private final Map<UUID, Long> quitMessageIdByPlayerId = new ConcurrentHashMap<>();
 
-  public VelocityEventRelay(Plugin plugin, ProxyServer proxyServer, Scheduler scheduler, Configuration configuration, JDA jda) {
-    this.proxyServer = proxyServer;
-    this.configuration = configuration;
-    this.scheduler = scheduler;
+  public VelocityEventRelay(
+    Plugin plugin,
+    ProxyServer proxyServer,
+    Scheduler scheduler,
+    Configuration configuration,
+    JDA jda,
+    AvatarURLFactory avatarURLFactory
+  ) {
     this.plugin = plugin;
+    this.proxyServer = proxyServer;
+    this.scheduler = scheduler;
+    this.configuration = configuration;
+    this.avatarURLFactory = avatarURLFactory;
 
     relayChannel = jda.getTextChannelById(configuration.relayChannelId);
     if (relayChannel == null) {
@@ -46,11 +55,14 @@ public class VelocityEventRelay {
     if (event.getPreviousServer().isPresent()) return;
 
     Player player = event.getPlayer();
-    Long quitMessageId = quitMessageIdByPlayerId.get(player.getUniqueId());
+    UUID playerId = player.getUniqueId();
+
+    Long quitMessageId = quitMessageIdByPlayerId.get(playerId);
     if (quitMessageId != null) {
       relayChannel.deleteMessageById(quitMessageId).queue();
-    } else {
-      String avatarUrl = getAvatarUrl(player);
+    }
+    else {
+      String avatarUrl = avatarURLFactory.getAvatarUrl(playerId);
       String message = String.format("%s joined the game", player.getUsername());
       MessageEmbed embed = new EmbedBuilder().setAuthor(message, avatarUrl, avatarUrl).build();
 
@@ -65,15 +77,15 @@ public class VelocityEventRelay {
 
     Player player = event.getPlayer();
     String username = player.getUsername();
+    UUID playerId = player.getUniqueId();
+
     String messageText = String.format("%s left the game", username);
-    String avatarUrl = getAvatarUrl(player);
+    String avatarUrl = avatarURLFactory.getAvatarUrl(playerId);
     MessageEmbed embed = new EmbedBuilder().setAuthor(messageText, avatarUrl, avatarUrl).build();
 
     relayChannel.sendMessageEmbeds(embed).queue(
       message -> {
-        UUID playerId = player.getUniqueId();
         long messageId = message.getIdLong();
-
         quitMessageIdByPlayerId.put(playerId, messageId);
         scheduleForgetQuitMessage(playerId, messageId);
       }
@@ -100,10 +112,6 @@ public class VelocityEventRelay {
 
     String gameMessage = String.format("<%s> %s", username, event.getMessage());
     sendMessage(Component.text(gameMessage));
-  }
-
-  private static String getAvatarUrl(Player player) {
-    return String.format("https://crafatar.com/avatars/%s", player.getUniqueId());
   }
 
   private void sendMessage(Component message) {

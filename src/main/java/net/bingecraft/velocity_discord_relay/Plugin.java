@@ -39,12 +39,18 @@ public final class Plugin {
     String token = new TokenReader(dataDirectory).read();
 
     JDA jda = new JDABuilder(token).create();
+    AvatarURLFactory avatarURLFactory = new AvatarURLFactory();
 
     VelocityEventRelay velocityEventRelay = new VelocityEventRelay(
-      this, proxyServer, proxyServer.getScheduler(), configuration, jda
+      this,
+      proxyServer,
+      proxyServer.getScheduler(),
+      configuration,
+      jda,
+      avatarURLFactory
     );
 
-    NotificationRelay notificationRelay = new NotificationRelay(configuration, jda);
+    NotificationRelay notificationRelay = new NotificationRelay(configuration, jda, avatarURLFactory);
     notificationClient = new NotificationClient(configuration, notificationRelay);
     notificationClient.start(this, proxyServer.getScheduler());
 
