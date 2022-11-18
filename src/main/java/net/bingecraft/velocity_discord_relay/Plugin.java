@@ -54,8 +54,8 @@ public final class Plugin {
 
     notificationClient = new NotificationClient(
       logger,
-      configuration,
-      new NotificationRelay(relayChannel, avatarURLFactory)
+      new NotificationRelay(relayChannel, avatarURLFactory),
+      configuration
     );
 
     notificationClient.connect();

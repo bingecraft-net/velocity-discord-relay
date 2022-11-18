@@ -14,15 +14,15 @@ import java.util.function.Consumer;
 public class NotificationClient {
   private final Logger logger;
   private final Consumer<Notification> listener;
+  private final Bootstrap bootstrap;
 
-  private final Bootstrap bootstrap = new Bootstrap();
   private final EventLoopGroup group = new NioEventLoopGroup();
 
-  public NotificationClient(Logger logger, Configuration configuration, Consumer<Notification> listener) {
+  public NotificationClient(Logger logger, Consumer<Notification> listener, Configuration configuration) {
     this.logger = logger;
     this.listener = listener;
-
-    bootstrap.group(group)
+    this.bootstrap = new Bootstrap()
+      .group(group)
       .channel(NioSocketChannel.class)
       .option(ChannelOption.TCP_NODELAY, true)
       .remoteAddress(configuration.notificationHost, configuration.notificationPort)
